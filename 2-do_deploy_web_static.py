@@ -30,13 +30,11 @@ def do_deploy(archive_path):
     """
         distributes an archive to web servers
     """
-    if os.path.exists(archive_path) is False:
-        return False
-    text = os.path.split(archive_path)[1]
-    fileName = os.path.splitext(text)[0]
-    target = '/data/web_static/releases' + fileName
-    path = archive_path.split('/')[1]
-    try:
+    if os.path.exists(archive_path):
+        text = os.path.split(archive_path)[1]
+        fileName = os.path.splitext(text)[0]
+        target = '/data/web_static/releases/' + fileName
+        path = archive_path.split('/')[1]
         put(archive_path, "/tmp/")
         run('sudo mkdir -p ' + target)
         run('sudo tar -xzf /tmp/' + path + ' -C' + target + '/')
@@ -47,5 +45,4 @@ def do_deploy(archive_path):
         run('sudo ln -s ' + target + '/' + ' /data/web_static/current')
         print('New version deployed!')
         return True
-    except Exception as ex:
-        return False
+    return False
