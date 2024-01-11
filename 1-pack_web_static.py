@@ -21,5 +21,5 @@ def do_pack():
         fabric.api.local(
             "tar -cvzf versions/web_static_{}.tgz web_static".format(pack))
         return pack
-    except Exception as ex:
+    except:
         return None
