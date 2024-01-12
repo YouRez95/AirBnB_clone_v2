@@ -7,8 +7,10 @@
 import os
 import datetime
 from fabric.api import *
+from fabric.operations import env, put, run
 
 env.hosts = ['100.25.163.224', '100.25.212.221']
+env.user = "ubuntu"
 
 
 def do_pack():
@@ -31,18 +33,17 @@ def do_deploy(archive_path):
         distributes an archive to web servers
     """
     if os.path.exists(archive_path):
-        text = os.path.split(archive_path)[1]
-        fileName = os.path.splitext(text)[0]
-        target = '/data/web_static/releases/' + fileName
-        path = archive_path.split('/')[1]
+        text = archive_path[9:]
+        target = '/data/web_static/releases/' + text[:-4]
+        fileName = "/tmp/" + text
         put(archive_path, "/tmp/")
         run('sudo mkdir -p ' + target)
-        run('sudo tar -xzf /tmp/' + path + ' -C' + target + '/')
-        run('sudo rm /tmp/' + path)
-        run('sudo mv ' + target + '/web_static/* ' + target + '/')
+        run('sudo tar -xzf ' + fileName + ' -C' + target + '/')
+        run('sudo rm ' + fileName)
+        run('sudo mv ' + target + '/web_static/* ' + target)
         run('sudo rm -rf ' + target + '/web_static')
         run('sudo rm -rf /data/web_static/current')
-        run('sudo ln -s ' + target + '/' + ' /data/web_static/current')
+        run('sudo ln -s ' + target + ' /data/web_static/current')
         print('New version deployed!')
         return True
     return False
