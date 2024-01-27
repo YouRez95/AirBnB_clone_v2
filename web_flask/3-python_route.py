@@ -46,7 +46,7 @@ def hbnb_python(text="is cool"):
       if the text not passed is cool is the default text
     """
     new_text = text.replace('_', ' ')
-    return "Pyhton {}".format(new_text)
+    return "Python {}".format(new_text)
 
 
 if __name__ == "__main__":
