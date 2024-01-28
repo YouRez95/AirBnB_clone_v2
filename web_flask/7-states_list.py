@@ -10,15 +10,15 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
+@app.teardown_appcontext
+def remove_session(self):
+    storage.close()
+
+
 @app.route("/states_list", strict_slashes=False)
 def state_list():
     data = storage.all(State).values()
     return render_template('7-states_list.html', states=data)
-
-
-@app.teardown_appcontext
-def remove_session(exception):
-    storage.close()
 
 
 if __name__ == "__main__":
