@@ -4,21 +4,17 @@
   module that run the app server
 """
 from models import storage
+from models.state import State
 from flask import Flask, render_template
+from sqlalchemy import text
 
 app = Flask(__name__)
 
 
 @app.route("/states_list", strict_slashes=False)
 def state_list():
-    data = storage.all()
-
-    states = {}
-    for x, y in data.items():
-        if x[:5] == "State":
-            states[y.id] = y.name
-    states = dict(sorted(states.items()))
-    return render_template('7-states_list.html', states=states)
+    data = storage.all(State).values()
+    return render_template('7-states_list.html', states=data)
 
 
 @app.teardown_appcontext
