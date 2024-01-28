@@ -13,10 +13,11 @@ app = Flask(__name__)
 def state_list():
     data = storage.all()
 
-    states = []
+    states = {}
     for x, y in data.items():
         if x[:5] == "State":
-            states.append(y)
+            states[y.id] = y.name
+    states = dict(sorted(states.items()))
     return render_template('7-states_list.html', states=states)
 
 
